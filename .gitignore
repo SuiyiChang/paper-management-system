@@ -1,0 +1,23 @@
+# 编译生成的文件
+*.o
+*.exe
+paper_system
+a.out
+
+# 编译生成的目录
+obj/
+bin/
+
+# IDE配置文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
