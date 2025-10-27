@@ -53,34 +53,34 @@ public:
     
     /**
      * @brief 追加一篇新论文到文件末尾
-     * 
+     *
      * @param paper 要追加的论文
      * @param filename 目标文件路径
      * @return 是否追加成功
      */
-    static bool appendPaper(const Paper& paper, 
+    static bool appendPaper(const Paper& paper,
                            const std::string& filename = "data/papers.txt");
 
-private:
-    /**
-     * @brief 解析一行论文数据
-     * 
-     * @param line 文件中的一行数据
-     * @return Paper对象
-     * 
-     * 解析格式：
-     * ID|Title|Author1;Author2;Author3|Keyword1|...|Keyword6|Year|Citations|Abstract
-     */
-    static Paper parseLine(const std::string& line);
-    
     /**
      * @brief 将一个字符串按分隔符分割
-     * 
+     *
      * @param str 要分割的字符串
      * @param delimiter 分隔符
      * @return 分割后的字符串向量
      */
     static std::vector<std::string> split(const std::string& str, char delimiter);
+
+private:
+    /**
+     * @brief 解析一行论文数据
+     *
+     * @param line 文件中的一行数据
+     * @return Paper对象
+     *
+     * 解析格式：
+     * ID|Title|Author1;Author2;Author3|Keyword1|...|Keyword6|Year|Citations|Abstract
+     */
+    static Paper parseLine(const std::string& line);
     
     /**
      * @brief 格式化论文数据为文件行

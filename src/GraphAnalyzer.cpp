@@ -82,9 +82,11 @@ std::vector<int> GraphAnalyzer::bfs(int startId,
     visited.insert(startId);
     
     while (!q.empty()) {
-        auto [currentId, depth] = q.front();
+        std::pair<int, int> current = q.front();
         q.pop();
-        
+        int currentId = current.first;
+        int depth = current.second;
+
         result.push_back(currentId);
         
         // 如果达到最大深度，不再扩展
@@ -160,14 +162,17 @@ std::vector<int> GraphAnalyzer::getCitedBy(int paperId) const {
     // 需要反向遍历图
     
     std::vector<int> result;
-    
-    for (const auto& [id, refs] : citationGraph) {
+
+    for (std::map<int, std::vector<int>>::const_iterator it = citationGraph.begin();
+         it != citationGraph.end(); ++it) {
+        int id = it->first;
+        const std::vector<int>& refs = it->second;
         // 如果refs中包含paperId，说明id引用了paperId
         if (std::find(refs.begin(), refs.end(), paperId) != refs.end()) {
             result.push_back(id);
         }
     }
-    
+
     return result;
 }
 
@@ -210,10 +215,11 @@ void GraphAnalyzer::printGraphStatistics() const {
     
     std::cout << "\n==================== 图统计信息 ====================" << std::endl;
     std::cout << "节点数（论文数）: " << paperMap.size() << std::endl;
-    
+
     int totalEdges = 0;
-    for (const auto& [id, refs] : citationGraph) {
-        totalEdges += refs.size();
+    for (std::map<int, std::vector<int>>::const_iterator it = citationGraph.begin();
+         it != citationGraph.end(); ++it) {
+        totalEdges += it->second.size();
     }
     std::cout << "边数（引用关系数）: " << totalEdges << std::endl;
     
