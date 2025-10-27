@@ -292,8 +292,9 @@ void Recommender::printKeywordStatistics() const {
     
     // 统计只出现一次的关键词
     int onceCount = 0;
-    for (const auto& [keyword, frequency] : keywordFrequency) {
-        if (frequency == 1) onceCount++;
+    for (std::map<std::string, int>::const_iterator it = keywordFrequency.begin();
+         it != keywordFrequency.end(); ++it) {
+        if (it->second == 1) onceCount++;
     }
     std::cout << "只出现一次的关键词数: " << onceCount << std::endl;
 }
