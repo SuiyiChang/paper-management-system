@@ -127,13 +127,14 @@ std::vector<std::pair<std::string, int>> Recommender::getTopKeywords(int n) {
     std::vector<std::pair<std::string, int>> result;
     
     // 方法1：排序法（简单但不够高效）
-    for (const auto& [keyword, frequency] : keywordFrequency) {
-        result.push_back({keyword, frequency});
+    for (std::map<std::string, int>::const_iterator it = keywordFrequency.begin();
+         it != keywordFrequency.end(); ++it) {
+        result.push_back({it->first, it->second});
     }
-    
+
     // 按频率降序排序
     std::sort(result.begin(), result.end(),
-              [](const auto& a, const auto& b) {
+              [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
                   return a.second > b.second;
               });
     
@@ -196,7 +197,7 @@ std::vector<std::pair<int, int>> Recommender::recommendSimilarPapers(
     
     // 按相似度降序排序
     std::sort(allSimilarities.begin(), allSimilarities.end(),
-              [](const auto& a, const auto& b) {
+              [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
                   return a.second > b.second;
               });
     
