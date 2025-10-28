@@ -9,6 +9,9 @@
 #include "KMPSearch.h"
 #include "Sorter.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 //使用模块化编程的思想，每个功能都应被视为一个独立的模块，
 //实现在不同的源文件和头文件中，并通过 include 语句引入
@@ -42,6 +45,11 @@ void displayMenu() {
 }
 
 int main() {//主函数中可以自由添加局部变量、交互输入信息
+    #ifdef _WIN32
+    // 设置 Windows 控制台为 UTF-8
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+    #endif
     int choice;
     bool dataLoaded = false;
 
