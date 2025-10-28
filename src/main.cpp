@@ -4,6 +4,10 @@
 #include <limits> // For numeric_limits
 #include "Paper.h"
 #include "FileManager.h"
+#include "HashSearch.h"
+#include "BSTSearch.h"
+#include "KMPSearch.h"
+#include "Sorter.h"
 
 
 //使用模块化编程的思想，每个功能都应被视为一个独立的模块，
@@ -215,10 +219,23 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
             }
             case 6: { // 按ID查找论文
                 if (dataLoaded) {
-                    
-                    //ToDo: 在此处调用按ID查找论文的功能函数
-                    std::cout << "按ID查找论文功能待实现，查找ID: " << std::endl;
+                    std::cout << "\n=== 按ID查找论文 (哈希表) ===" << std::endl;
 
+                    int searchId;
+                    std::cout << "请输入要查找的论文ID: ";
+                    std::cin >> searchId;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                    // 构建哈希表并查找
+                    HashSearch hashSearch(papers);
+                    Paper* foundPaper = hashSearch.findById(searchId);
+
+                    if (foundPaper != nullptr) {
+                        std::cout << "\n找到论文：" << std::endl;
+                        foundPaper->print();
+                    } else {
+                        std::cout << "未找到ID为 " << searchId << " 的论文。" << std::endl;
+                    }
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
@@ -226,9 +243,23 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
             }
             case 7: { // 按标题查找论文 (BST)
                 if (dataLoaded) {
-                    //ToDo: 在此处调用按标题查找论文的功能函数
-                    std::cout << "按标题查找论文功能待实现，查找标题: " << std::endl;
+                    std::cout << "\n=== 按标题查找论文 (二叉搜索树) ===" << std::endl;
 
+                    std::string searchTitle;
+                    std::cout << "请输入要查找的论文标题（完整标题）: ";
+                    std::getline(std::cin, searchTitle);
+
+                    // 构建BST并查找
+                    BSTSearch bstSearch(papers);
+                    Paper* foundPaper = bstSearch.findByTitle(searchTitle);
+
+                    if (foundPaper != nullptr) {
+                        std::cout << "\n找到论文：" << std::endl;
+                        foundPaper->print();
+                    } else {
+                        std::cout << "未找到标题为 \"" << searchTitle << "\" 的论文。" << std::endl;
+                        std::cout << "提示：请输入完整的标题，标题区分大小写。" << std::endl;
+                    }
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
@@ -236,8 +267,26 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
             }
             case 8: { // 按内容模糊查找论文 (KMP)
                 if (dataLoaded) {
-                    //ToDo: 在此处调用按内容模糊查找论文的功能函数 (KMP)
-                    std::cout << "按内容模糊查找论文 (KMP) 功能待实现。" << std::endl;
+                    std::cout << "\n=== 按内容模糊查找论文 (KMP算法) ===" << std::endl;
+
+                    std::string keyword;
+                    std::cout << "请输入查找关键词: ";
+                    std::getline(std::cin, keyword);
+
+                    // 使用KMP算法查找
+                    std::vector<Paper*> results = KMPSearch::searchByContent(papers, keyword);
+
+                    if (!results.empty()) {
+                        std::cout << "\n找到 " << results.size() << " 篇包含 \"" << keyword << "\" 的论文：" << std::endl;
+                        std::cout << "------------------------------" << std::endl;
+                        for (size_t i = 0; i < results.size(); i++) {
+                            std::cout << "[" << (i + 1) << "] ";
+                            results[i]->printBrief();
+                            std::cout << std::endl;
+                        }
+                    } else {
+                        std::cout << "未找到包含 \"" << keyword << "\" 的论文。" << std::endl;
+                    }
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
@@ -245,32 +294,69 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
             }
             case 9: // 按年份降序排序并显示
                 if (dataLoaded) {
-                    //ToDo: 在此处调用按年份降序排序并显示的功能函数
-                    std::cout << "按年份降序排序并显示功能待实现。" << std::endl;
+                    std::cout << "\n=== 按年份降序排序 (快速排序) ===" << std::endl;
+
+                    Sorter sorter(papers);
+                    std::vector<Paper> sortedPapers = sorter.sortByYear(true);  // true = 降序
+                    Sorter::displaySorted(sortedPapers);
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
                 break;
             case 10: // 按引用次数降序排序并显示
                 if (dataLoaded) {
-                   //ToDo: 在此处调用按引用次数排序并显示的功能函数
-                   std::cout << "按引用次数降序排序并显示功能待实现。" << std::endl;
+                    std::cout << "\n=== 按引用次数降序排序 (快速排序) ===" << std::endl;
+
+                    Sorter sorter(papers);
+                    std::vector<Paper> sortedPapers = sorter.sortByCitations(true);  // true = 降序
+                    Sorter::displaySorted(sortedPapers);
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
                 break;
             case 11: // 按标题字母顺序排序并显示
                 if (dataLoaded) {
-                    //ToDo: 在此处调用按标题字母顺序排序并显示的功能函数
-                    std::cout << "按标题字母顺序排序并显示功能待实现。" << std::endl;
+                    std::cout << "\n=== 按标题字母顺序排序 (快速排序) ===" << std::endl;
+
+                    Sorter sorter(papers);
+                    std::vector<Paper> sortedPapers = sorter.sortByTitle();
+                    Sorter::displaySorted(sortedPapers);
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
                 break;
             case 12: { // 合并两个有序论文列表
                 if (dataLoaded) {
-                    //ToDo: 在此处调用合并两个有序论文列表的功能函数
-                    std::cout << "合并两个有序论文列表功能待实现。" << std::endl;
+                    std::cout << "\n=== 合并两个有序论文列表 (双指针法) ===" << std::endl;
+
+                    // 将当前论文列表分成两部分进行演示
+                    if (papers.size() < 2) {
+                        std::cout << "论文数量太少，无法演示合并功能。" << std::endl;
+                        break;
+                    }
+
+                    std::cout << "将论文列表分成两半，分别排序后再合并..." << std::endl;
+
+                    // 分成两半
+                    size_t mid = papers.size() / 2;
+                    std::vector<Paper> list1(papers.begin(), papers.begin() + mid);
+                    std::vector<Paper> list2(papers.begin() + mid, papers.end());
+
+                    // 分别排序
+                    Sorter sorter1(list1);
+                    Sorter sorter2(list2);
+                    std::vector<Paper> sortedList1 = sorter1.sortByYear(true);
+                    std::vector<Paper> sortedList2 = sorter2.sortByYear(true);
+
+                    std::cout << "列表1: " << sortedList1.size() << " 篇论文" << std::endl;
+                    std::cout << "列表2: " << sortedList2.size() << " 篇论文" << std::endl;
+
+                    // 合并
+                    std::vector<Paper> merged = Sorter::mergeSortedLists(
+                        sortedList1, sortedList2, "year", true);
+
+                    std::cout << "\n合并后的列表：" << std::endl;
+                    Sorter::displaySorted(merged);
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }

@@ -8,12 +8,14 @@
 
 // ==================== 构造函数 ====================
 BSTSearch::BSTSearch(std::vector<Paper>& papers) : root(nullptr) {
-    // TODO: 同学B实现
-    // 1. 初始化root为nullptr
+    // 1. 初始化root为nullptr（已在初始化列表中完成）
     // 2. 遍历papers，逐个插入到BST中
-    // 注意：插入顺序会影响树的平衡性
-    
-    std::cout << "BSTSearch: 构造函数待实现" << std::endl;
+    for (size_t i = 0; i < papers.size(); i++) {
+        root = insertNode(root, papers[i].getTitle(), &papers[i]);
+    }
+
+    std::cout << "BSTSearch: 已构建二叉搜索树，共 " << papers.size()
+              << " 篇论文，树高度: " << getHeight(root) << std::endl;
 }
 
 // ==================== 析构函数 ====================
