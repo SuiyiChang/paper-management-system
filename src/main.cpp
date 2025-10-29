@@ -24,6 +24,93 @@ std::vector<Paper> papers;
 // 默认数据文件路径
 const std::string DEFAULT_DATA_FILE = "data/papers.txt";
 
+// 分页显示常量
+const int PAGE_SIZE = 20;
+
+// 分页显示论文列表的辅助函数
+void displayPapersWithPagination(const std::vector<Paper>& paperList) {
+    if (paperList.empty()) {
+        return;
+    }
+
+    size_t totalCount = paperList.size();
+    size_t displayed = 0;
+
+    while (displayed < totalCount) {
+        // 计算本次显示的数量
+        size_t remaining = totalCount - displayed;
+        size_t toDisplay = (remaining > PAGE_SIZE) ? PAGE_SIZE : remaining;
+
+        // 显示论文
+        for (size_t i = 0; i < toDisplay; i++) {
+            std::cout << "[" << (displayed + i + 1) << "] ";
+            paperList[displayed + i].printBrief();
+            std::cout << std::endl;
+        }
+
+        displayed += toDisplay;
+
+        // 如果还有未显示的论文，询问用户
+        if (displayed < totalCount) {
+            std::cout << "\n当前已显示 " << displayed << " 篇论文，还有 "
+                      << (totalCount - displayed) << " 篇论文未显示。" << std::endl;
+            std::cout << "是否继续显示？(y/n): ";
+
+            char response;
+            std::cin >> response;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            if (response != 'y' && response != 'Y') {
+                std::cout << "已停止显示。" << std::endl;
+                break;
+            }
+            std::cout << std::endl;
+        }
+    }
+}
+
+// 分页显示论文指针列表的辅助函数
+void displayPaperPointersWithPagination(const std::vector<Paper*>& paperList) {
+    if (paperList.empty()) {
+        return;
+    }
+
+    size_t totalCount = paperList.size();
+    size_t displayed = 0;
+
+    while (displayed < totalCount) {
+        // 计算本次显示的数量
+        size_t remaining = totalCount - displayed;
+        size_t toDisplay = (remaining > PAGE_SIZE) ? PAGE_SIZE : remaining;
+
+        // 显示论文
+        for (size_t i = 0; i < toDisplay; i++) {
+            std::cout << "[" << (displayed + i + 1) << "] ";
+            paperList[displayed + i]->printBrief();
+            std::cout << std::endl;
+        }
+
+        displayed += toDisplay;
+
+        // 如果还有未显示的论文，询问用户
+        if (displayed < totalCount) {
+            std::cout << "\n当前已显示 " << displayed << " 篇论文，还有 "
+                      << (totalCount - displayed) << " 篇论文未显示。" << std::endl;
+            std::cout << "是否继续显示？(y/n): ";
+
+            char response;
+            std::cin >> response;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            if (response != 'y' && response != 'Y') {
+                std::cout << "已停止显示。" << std::endl;
+                break;
+            }
+            std::cout << std::endl;
+        }
+    }
+}
+
 void displayMenu() {
     std::cout << "\n--- 学术文献管理与关联分析系统 ---" << std::endl;
     std::cout << "1. 加载论文数据" << std::endl;
@@ -31,17 +118,13 @@ void displayMenu() {
     std::cout << "3. 添加新论文" << std::endl;
     std::cout << "4. 删除论文" << std::endl;
     std::cout << "5. 保存当前数据到文件" << std::endl;
-    std::cout << "6. 按ID查找论文" << std::endl;
+    std::cout << "6. 按ID查找论文 (Hash表)" << std::endl;
     std::cout << "7. 按标题查找论文 (BST)" << std::endl;
-    std::cout << "8. 按内容模糊查找论文 (KMP)" << std::endl; 
-    std::cout << "9. 按年份降序排序并显示" << std::endl;
-    std::cout << "10. 按引用次数降序排序并显示" << std::endl;
-    std::cout << "11. 按标题字母顺序排序并显示" << std::endl;
-    std::cout << "12. 合并两个有序论文列表" << std::endl;      
-    std::cout << "13. 查找相关论文 (BFS)" << std::endl;
-    std::cout << "14. 获取关键词推荐 (Top-N)" << std::endl;
-
-
+    std::cout << "8. 按内容模糊查找论文 (KMP)" << std::endl;
+    std::cout << "9. 论文排序 (年份/引用次数/标题)" << std::endl;
+    std::cout << "10. 合并两个有序论文列表" << std::endl;
+    std::cout << "11. 查找相关论文 (BFS)" << std::endl;
+    std::cout << "12. 获取关键词推荐 (Top-N)" << std::endl;
     std::cout << "0. 退出" << std::endl;
     std::cout << "请输入您的选择: ";
 }
@@ -90,10 +173,7 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                     std::cout << "共 " << papers.size() << " 篇论文：" << std::endl;
                     std::cout << "------------------------------" << std::endl;
 
-                    for (size_t i = 0; i < papers.size(); i++) {
-                        papers[i].printBrief();
-                        std::cout << std::endl;
-                    }
+                    displayPapersWithPagination(papers);
 
                     std::cout << "==============================" << std::endl;
                 } else {
@@ -289,11 +369,8 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                     if (!results.empty()) {
                         std::cout << "\n找到 " << results.size() << " 篇包含 \"" << keyword << "\" 的论文：" << std::endl;
                         std::cout << "------------------------------" << std::endl;
-                        for (size_t i = 0; i < results.size(); i++) {
-                            std::cout << "[" << (i + 1) << "] ";
-                            results[i]->printBrief();
-                            std::cout << std::endl;
-                        }
+                        displayPaperPointersWithPagination(results);
+                        std::cout << "------------------------------" << std::endl;
                     } else {
                         std::cout << "未找到包含 \"" << keyword << "\" 的论文。" << std::endl;
                     }
@@ -302,40 +379,55 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                 }
                 break;
             }
-            case 9: // 按年份降序排序并显示
+            case 9: { // 论文排序
                 if (dataLoaded) {
-                    std::cout << "\n=== 按年份降序排序 (快速排序) ===" << std::endl;
+                    std::cout << "\n=== 论文排序 (快速排序) ===" << std::endl;
+                    std::cout << "请选择排序方式：" << std::endl;
+                    std::cout << "1. 按年份降序排序" << std::endl;
+                    std::cout << "2. 按引用次数降序排序" << std::endl;
+                    std::cout << "3. 按标题字母顺序排序" << std::endl;
+                    std::cout << "请输入选择 (1-3): ";
+
+                    int sortChoice;
+                    std::cin >> sortChoice;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                    if (sortChoice < 1 || sortChoice > 3) {
+                        std::cout << "无效的选择。" << std::endl;
+                        break;
+                    }
 
                     Sorter sorter(papers);
-                    std::vector<Paper> sortedPapers = sorter.sortByYear(true);  // true = 降序
-                    Sorter::displaySorted(sortedPapers);
+                    std::vector<Paper> sortedPapers;
+
+                    switch (sortChoice) {
+                        case 1:
+                            std::cout << "\n正在按年份降序排序..." << std::endl;
+                            sortedPapers = sorter.sortByYear(true);
+                            break;
+                        case 2:
+                            std::cout << "\n正在按引用次数降序排序..." << std::endl;
+                            sortedPapers = sorter.sortByCitations(true);
+                            break;
+                        case 3:
+                            std::cout << "\n正在按标题字母顺序排序..." << std::endl;
+                            sortedPapers = sorter.sortByTitle();
+                            break;
+                    }
+
+                    std::cout << "\n==================== 排序结果 ====================" << std::endl;
+                    std::cout << "共 " << sortedPapers.size() << " 篇论文" << std::endl;
+                    std::cout << "------------------------------" << std::endl;
+
+                    displayPapersWithPagination(sortedPapers);
+
+                    std::cout << "=====================================================" << std::endl;
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
                 break;
-            case 10: // 按引用次数降序排序并显示
-                if (dataLoaded) {
-                    std::cout << "\n=== 按引用次数降序排序 (快速排序) ===" << std::endl;
-
-                    Sorter sorter(papers);
-                    std::vector<Paper> sortedPapers = sorter.sortByCitations(true);  // true = 降序
-                    Sorter::displaySorted(sortedPapers);
-                } else {
-                    std::cout << "请先加载论文数据。" << std::endl;
-                }
-                break;
-            case 11: // 按标题字母顺序排序并显示
-                if (dataLoaded) {
-                    std::cout << "\n=== 按标题字母顺序排序 (快速排序) ===" << std::endl;
-
-                    Sorter sorter(papers);
-                    std::vector<Paper> sortedPapers = sorter.sortByTitle();
-                    Sorter::displaySorted(sortedPapers);
-                } else {
-                    std::cout << "请先加载论文数据。" << std::endl;
-                }
-                break;
-            case 12: { // 合并两个有序论文列表
+            }
+            case 10: { // 合并两个有序论文列表
                 if (dataLoaded) {
                     std::cout << "\n=== 合并两个有序论文列表 (双指针法) ===" << std::endl;
 
@@ -365,14 +457,19 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                     std::vector<Paper> merged = Sorter::mergeSortedLists(
                         sortedList1, sortedList2, "year", true);
 
-                    std::cout << "\n合并后的列表：" << std::endl;
-                    Sorter::displaySorted(merged);
+                    std::cout << "\n==================== 合并后的列表 ====================" << std::endl;
+                    std::cout << "共 " << merged.size() << " 篇论文" << std::endl;
+                    std::cout << "------------------------------" << std::endl;
+
+                    displayPapersWithPagination(merged);
+
+                    std::cout << "======================================================" << std::endl;
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
                 break;
             }
-            case 13: { // 查找相关论文 (BFS)
+            case 11: { // 查找相关论文 (BFS)
                 if (dataLoaded) {
                     std::cout << "\n=== 查找相关论文 (BFS图遍历) ===" << std::endl;
 
@@ -389,23 +486,19 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                         std::cout << "\n找到 " << relatedIds.size() << " 篇相关论文（基于关键词共享）：" << std::endl;
                         std::cout << "------------------------------" << std::endl;
 
-                        // 显示前20篇
-                        int displayCount = (relatedIds.size() > 20) ? 20 : relatedIds.size();
-                        for (int i = 0; i < displayCount; i++) {
-                            // 查找论文
+                        // 构建相关论文列表用于分页显示
+                        std::vector<Paper> relatedPapers;
+                        for (size_t i = 0; i < relatedIds.size(); i++) {
                             for (size_t j = 0; j < papers.size(); j++) {
                                 if (papers[j].getPaperId() == relatedIds[i]) {
-                                    std::cout << "[" << (i + 1) << "] ";
-                                    papers[j].printBrief();
-                                    std::cout << std::endl;
+                                    relatedPapers.push_back(papers[j]);
                                     break;
                                 }
                             }
                         }
 
-                        if (relatedIds.size() > 20) {
-                            std::cout << "... 还有 " << (relatedIds.size() - 20) << " 篇论文未显示" << std::endl;
-                        }
+                        displayPapersWithPagination(relatedPapers);
+                        std::cout << "------------------------------" << std::endl;
                     } else {
                         std::cout << "未找到相关论文。" << std::endl;
                     }
@@ -414,7 +507,7 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                 }
                 break;
             }
-            case 14: { // 获取关键词推荐 (Top-N)
+            case 12: { // 获取关键词推荐 (Top-N)
                 if (dataLoaded) {
                     std::cout << "\n=== 获取关键词推荐 (Top-N算法) ===" << std::endl;
 
