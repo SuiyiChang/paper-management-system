@@ -1,0 +1,6 @@
+ID|Title|AuthorsString|Keyword1|Keyword2|Keyword3|Keyword4|Keyword5|Keyword6|Year|Citations|AbstractSnippet
+2001|Attention Mechanisms in Neural Networks|John Smith;Jane Doe|Deep Learning|Attention|Neural Networks||||2018|5000|A comprehensive study of attention mechanisms in deep neural networks.
+2002|Transformer Architectures for NLP|Alice Wang|Transformers|Natural Language Processing|BERT||||2019|8000|Exploring transformer-based architectures for natural language processing tasks.
+2003|Recent Advances in Computer Vision|Bob Chen;Carol Lee|Computer Vision|Deep Learning|CNN||||2020|6000|A survey of recent advances in computer vision using deep learning.
+2004|Reinforcement Learning Applications|David Kim|Reinforcement Learning|AI|Machine Learning||||2021|4000|Practical applications of reinforcement learning in various domains.
+2005|Graph Neural Networks for Recommendation|Emma Zhang|Graph Neural Networks|Recommendation Systems|Deep Learning||||2022|3000|Using graph neural networks for building recommendation systems.

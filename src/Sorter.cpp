@@ -116,11 +116,13 @@ int Sorter::partitionByTitle(std::vector<Paper>& arr, int low, int high) {
 // ==================== 归并排序（可选） ====================
 void Sorter::mergeSortByYear(std::vector<Paper>& arr, int left, int right, bool descending) {
     // TODO: 同学B实现（可选）
+    (void)arr; (void)left; (void)right; (void)descending;  // 避免未使用参数警告
     std::cout << "Sorter::mergeSortByYear: 待实现" << std::endl;
 }
 
 void Sorter::mergeByYear(std::vector<Paper>& arr, int left, int mid, int right, bool descending) {
     // TODO: 同学B实现（可选）
+    (void)arr; (void)left; (void)mid; (void)right; (void)descending;  // 避免未使用参数警告
     std::cout << "Sorter::mergeByYear: 待实现" << std::endl;
 }
 

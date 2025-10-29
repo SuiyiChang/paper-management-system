@@ -149,6 +149,7 @@ std::vector<int> GraphAnalyzer::findRelatedPapersByKeywords(int paperId, int max
 // ==================== DFS（可选） ====================
 std::vector<int> GraphAnalyzer::findRelatedPapersByDFS(int paperId) {
     // TODO: 同学C实现（可选）
+    (void)paperId;  // 避免未使用参数警告
     std::cout << "GraphAnalyzer::findRelatedPapersByDFS: 待实现" << std::endl;
     return std::vector<int>();
 }
@@ -207,6 +208,7 @@ int GraphAnalyzer::getInDegree(int paperId) const {
 // ==================== 找出最有影响力的论文（可选） ====================
 std::vector<int> GraphAnalyzer::getMostInfluentialPapers(int topN) const {
     // TODO: 同学C实现（可选）
+    (void)topN;  // 避免未使用参数警告
     std::cout << "GraphAnalyzer::getMostInfluentialPapers: 待实现" << std::endl;
     return std::vector<int>();
 }

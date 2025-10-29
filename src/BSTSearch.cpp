@@ -117,6 +117,7 @@ Paper* BSTSearch::findByTitle(const std::string& title) {
 // ==================== 前缀查找（可选） ====================
 std::vector<Paper*> BSTSearch::findByTitlePrefix(const std::string& prefix) {
     // TODO: 同学B实现（可选）
+    (void)prefix;  // 避免未使用参数警告
     std::vector<Paper*> result;
     std::cout << "BSTSearch::findByTitlePrefix: 待实现" << std::endl;
     return result;
@@ -134,6 +135,7 @@ bool BSTSearch::insert(Paper* paper) {
 // ==================== 删除功能（可选） ====================
 bool BSTSearch::remove(const std::string& title) {
     // TODO: 同学B实现（可选，BST删除较复杂）
+    (void)title;  // 避免未使用参数警告
     std::cout << "BSTSearch::remove: 待实现" << std::endl;
     return false;
 }

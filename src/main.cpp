@@ -121,10 +121,12 @@ void displayMenu() {
     std::cout << "6. 按ID查找论文 (Hash表)" << std::endl;
     std::cout << "7. 按标题查找论文 (BST)" << std::endl;
     std::cout << "8. 按内容模糊查找论文 (KMP)" << std::endl;
-    std::cout << "9. 论文排序 (年份/引用次数/标题)" << std::endl;
-    std::cout << "10. 合并两个有序论文列表" << std::endl;
-    std::cout << "11. 查找相关论文 (BFS)" << std::endl;
-    std::cout << "12. 获取关键词推荐 (Top-N)" << std::endl;
+    std::cout << "9. 按年份降序排序并显示" << std::endl;
+    std::cout << "10. 按引用次数降序排序并显示" << std::endl;
+    std::cout << "11. 按标题字母顺序排序并显示" << std::endl;
+    std::cout << "12. 合并两个有序论文列表" << std::endl;
+    std::cout << "13. 查找相关论文 (BFS)" << std::endl;
+    std::cout << "14. 获取关键词推荐 (Top-N)" << std::endl;
     std::cout << "0. 退出" << std::endl;
     std::cout << "请输入您的选择: ";
 }
@@ -379,41 +381,12 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                 }
                 break;
             }
-            case 9: { // 论文排序
+            case 9: // 按年份降序排序并显示
                 if (dataLoaded) {
-                    std::cout << "\n=== 论文排序 (快速排序) ===" << std::endl;
-                    std::cout << "请选择排序方式：" << std::endl;
-                    std::cout << "1. 按年份降序排序" << std::endl;
-                    std::cout << "2. 按引用次数降序排序" << std::endl;
-                    std::cout << "3. 按标题字母顺序排序" << std::endl;
-                    std::cout << "请输入选择 (1-3): ";
-
-                    int sortChoice;
-                    std::cin >> sortChoice;
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                    if (sortChoice < 1 || sortChoice > 3) {
-                        std::cout << "无效的选择。" << std::endl;
-                        break;
-                    }
+                    std::cout << "\n=== 按年份降序排序 (快速排序) ===" << std::endl;
 
                     Sorter sorter(papers);
-                    std::vector<Paper> sortedPapers;
-
-                    switch (sortChoice) {
-                        case 1:
-                            std::cout << "\n正在按年份降序排序..." << std::endl;
-                            sortedPapers = sorter.sortByYear(true);
-                            break;
-                        case 2:
-                            std::cout << "\n正在按引用次数降序排序..." << std::endl;
-                            sortedPapers = sorter.sortByCitations(true);
-                            break;
-                        case 3:
-                            std::cout << "\n正在按标题字母顺序排序..." << std::endl;
-                            sortedPapers = sorter.sortByTitle();
-                            break;
-                    }
+                    std::vector<Paper> sortedPapers = sorter.sortByYear(true);  // true = 降序
 
                     std::cout << "\n==================== 排序结果 ====================" << std::endl;
                     std::cout << "共 " << sortedPapers.size() << " 篇论文" << std::endl;
@@ -426,50 +399,98 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
                 break;
-            }
-            case 10: { // 合并两个有序论文列表
+            case 10: // 按引用次数降序排序并显示
                 if (dataLoaded) {
-                    std::cout << "\n=== 合并两个有序论文列表 (双指针法) ===" << std::endl;
+                    std::cout << "\n=== 按引用次数降序排序 (快速排序) ===" << std::endl;
 
-                    // 将当前论文列表分成两部分进行演示
-                    if (papers.size() < 2) {
-                        std::cout << "论文数量太少，无法演示合并功能。" << std::endl;
-                        break;
-                    }
+                    Sorter sorter(papers);
+                    std::vector<Paper> sortedPapers = sorter.sortByCitations(true);  // true = 降序
 
-                    std::cout << "将论文列表分成两半，分别排序后再合并..." << std::endl;
-
-                    // 分成两半
-                    size_t mid = papers.size() / 2;
-                    std::vector<Paper> list1(papers.begin(), papers.begin() + mid);
-                    std::vector<Paper> list2(papers.begin() + mid, papers.end());
-
-                    // 分别排序
-                    Sorter sorter1(list1);
-                    Sorter sorter2(list2);
-                    std::vector<Paper> sortedList1 = sorter1.sortByYear(true);
-                    std::vector<Paper> sortedList2 = sorter2.sortByYear(true);
-
-                    std::cout << "列表1: " << sortedList1.size() << " 篇论文" << std::endl;
-                    std::cout << "列表2: " << sortedList2.size() << " 篇论文" << std::endl;
-
-                    // 合并
-                    std::vector<Paper> merged = Sorter::mergeSortedLists(
-                        sortedList1, sortedList2, "year", true);
-
-                    std::cout << "\n==================== 合并后的列表 ====================" << std::endl;
-                    std::cout << "共 " << merged.size() << " 篇论文" << std::endl;
+                    std::cout << "\n==================== 排序结果 ====================" << std::endl;
+                    std::cout << "共 " << sortedPapers.size() << " 篇论文" << std::endl;
                     std::cout << "------------------------------" << std::endl;
 
-                    displayPapersWithPagination(merged);
+                    displayPapersWithPagination(sortedPapers);
 
-                    std::cout << "======================================================" << std::endl;
+                    std::cout << "=====================================================" << std::endl;
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
                 break;
+            case 11: // 按标题字母顺序排序并显示
+                if (dataLoaded) {
+                    std::cout << "\n=== 按标题字母顺序排序 (快速排序) ===" << std::endl;
+
+                    Sorter sorter(papers);
+                    std::vector<Paper> sortedPapers = sorter.sortByTitle();
+
+                    std::cout << "\n==================== 排序结果 ====================" << std::endl;
+                    std::cout << "共 " << sortedPapers.size() << " 篇论文" << std::endl;
+                    std::cout << "------------------------------" << std::endl;
+
+                    displayPapersWithPagination(sortedPapers);
+
+                    std::cout << "=====================================================" << std::endl;
+                } else {
+                    std::cout << "请先加载论文数据。" << std::endl;
+                }
+                break;
+            case 12: { // 合并两个有序论文列表
+                if (dataLoaded) {
+                    std::cout << "\n=== 合并两个有序论文列表 (双指针法) ===" << std::endl;
+                    std::cout << "此功能将当前论文列表与新导入的论文列表合并，并保持有序。" << std::endl;
+                    std::cout << "\n步骤1: 对当前论文列表按年份排序..." << std::endl;
+
+                    // 对当前论文列表按年份排序
+                    Sorter sorter1(papers);
+                    std::vector<Paper> sortedList1 = sorter1.sortByYear(true);
+                    std::cout << "当前列表已排序，共 " << sortedList1.size() << " 篇论文。" << std::endl;
+
+                    // 加载新导入的论文列表
+                    std::cout << "\n步骤2: 加载新导入的论文列表..." << std::endl;
+                    std::cout << "请输入新论文文件路径 (默认: data/new_papers.txt): ";
+                    std::string newPapersFile;
+                    std::getline(std::cin, newPapersFile);
+
+                    if (newPapersFile.empty()) {
+                        newPapersFile = "data/new_papers.txt";
+                    }
+
+                    std::vector<Paper> newPapers = FileManager::loadPapers(newPapersFile);
+
+                    if (newPapers.empty()) {
+                        std::cout << "新论文列表加载失败或为空，无法合并。" << std::endl;
+                        break;
+                    }
+
+                    std::cout << "新论文列表加载成功，共 " << newPapers.size() << " 篇论文。" << std::endl;
+
+                    // 对新论文列表按年份排序
+                    std::cout << "\n步骤3: 对新论文列表按年份排序..." << std::endl;
+                    Sorter sorter2(newPapers);
+                    std::vector<Paper> sortedList2 = sorter2.sortByYear(true);
+                    std::cout << "新论文列表已排序。" << std::endl;
+
+                    // 合并两个有序列表
+                    std::cout << "\n步骤4: 使用双指针法合并两个有序列表..." << std::endl;
+                    std::vector<Paper> merged = Sorter::mergeSortedLists(
+                        sortedList1, sortedList2, "year", true);
+
+                    std::cout << "\n==================== 合并结果 ====================" << std::endl;
+                    std::cout << "合并成功！共 " << merged.size() << " 篇论文" << std::endl;
+                    std::cout << "（原列表: " << sortedList1.size()
+                              << " 篇 + 新列表: " << sortedList2.size() << " 篇）" << std::endl;
+                    std::cout << "------------------------------" << std::endl;
+
+                    displayPapersWithPagination(merged);
+
+                    std::cout << "=====================================================" << std::endl;
+                } else {
+                    std::cout << "请先加载论文数据（功能1）。" << std::endl;
+                }
+                break;
             }
-            case 11: { // 查找相关论文 (BFS)
+            case 13: { // 查找相关论文 (BFS)
                 if (dataLoaded) {
                     std::cout << "\n=== 查找相关论文 (BFS图遍历) ===" << std::endl;
 
@@ -507,7 +528,7 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
                 }
                 break;
             }
-            case 12: { // 获取关键词推荐 (Top-N)
+            case 14: { // 获取关键词推荐 (Top-N)
                 if (dataLoaded) {
                     std::cout << "\n=== 获取关键词推荐 (Top-N算法) ===" << std::endl;
 
