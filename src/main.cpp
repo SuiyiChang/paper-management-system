@@ -8,6 +8,8 @@
 #include "BSTSearch.h"
 #include "KMPSearch.h"
 #include "Sorter.h"
+#include "GraphAnalyzer.h"
+#include "Recommender.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -372,8 +374,41 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
             }
             case 13: { // 查找相关论文 (BFS)
                 if (dataLoaded) {
-                    //ToDo: 在此处调用查找相关论文的功能函数
-                    std::cout << "查找相关论文 (BFS) 功能待实现。" << std::endl;
+                    std::cout << "\n=== 查找相关论文 (BFS图遍历) ===" << std::endl;
+
+                    int searchId;
+                    std::cout << "请输入起始论文ID: ";
+                    std::cin >> searchId;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                    // 构建图并执行BFS
+                    GraphAnalyzer analyzer(papers);
+                    std::vector<int> relatedIds = analyzer.findRelatedPapersByBFS(searchId);
+
+                    if (!relatedIds.empty()) {
+                        std::cout << "\n找到 " << relatedIds.size() << " 篇相关论文（基于关键词共享）：" << std::endl;
+                        std::cout << "------------------------------" << std::endl;
+
+                        // 显示前20篇
+                        int displayCount = (relatedIds.size() > 20) ? 20 : relatedIds.size();
+                        for (int i = 0; i < displayCount; i++) {
+                            // 查找论文
+                            for (size_t j = 0; j < papers.size(); j++) {
+                                if (papers[j].getPaperId() == relatedIds[i]) {
+                                    std::cout << "[" << (i + 1) << "] ";
+                                    papers[j].printBrief();
+                                    std::cout << std::endl;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (relatedIds.size() > 20) {
+                            std::cout << "... 还有 " << (relatedIds.size() - 20) << " 篇论文未显示" << std::endl;
+                        }
+                    } else {
+                        std::cout << "未找到相关论文。" << std::endl;
+                    }
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
@@ -381,8 +416,33 @@ int main() {//主函数中可以自由添加局部变量、交互输入信息
             }
             case 14: { // 获取关键词推荐 (Top-N)
                 if (dataLoaded) {
-                    //ToDo: 在此处调用获取关键词推荐的功能函数
-                    std::cout << "获取关键词推荐 (Top-N) 功能待实现。" << std::endl;
+                    std::cout << "\n=== 获取关键词推荐 (Top-N算法) ===" << std::endl;
+
+                    int topN;
+                    std::cout << "请输入要显示的Top-N数量: ";
+                    std::cin >> topN;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                    if (topN <= 0) {
+                        std::cout << "N必须大于0" << std::endl;
+                        break;
+                    }
+
+                    // 构建推荐器并获取Top-N关键词
+                    Recommender recommender(papers);
+                    std::vector<std::pair<std::string, int>> topKeywords = recommender.getTopKeywords(topN);
+
+                    if (!topKeywords.empty()) {
+                        std::cout << "\n==================== Top-" << topN << " 热门关键词 ====================" << std::endl;
+                        for (size_t i = 0; i < topKeywords.size(); i++) {
+                            std::cout << "  [" << (i + 1) << "] "
+                                      << topKeywords[i].first
+                                      << " - 出现次数: " << topKeywords[i].second << std::endl;
+                        }
+                        std::cout << "=====================================================" << std::endl;
+                    } else {
+                        std::cout << "未找到关键词数据。" << std::endl;
+                    }
                 } else {
                     std::cout << "请先加载论文数据。" << std::endl;
                 }
