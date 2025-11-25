@@ -119,11 +119,12 @@ void Recommender::heapifyDown(std::vector<MinHeapNode>& heap, int index) {
 
 // ==================== 核心功能：获取Top-N关键词 ====================
 std::vector<std::pair<std::string, int>> Recommender::getTopKeywords(int n) {
-    // TODO: 同学C实现
-    // 使用堆算法找出频率最高的N个关键词
-    
-    std::cout << "Recommender::getTopKeywords: 待完善实现" << std::endl;
-    
+    // 使用排序算法找出频率最高的N个关键词
+    // 时间复杂度：O(m log m)，其中m是不同关键词的数量
+
+    std::cout << "正在统计关键词频率..." << std::endl;
+    std::cout << "总关键词种类数: " << keywordFrequency.size() << std::endl;
+
     std::vector<std::pair<std::string, int>> result;
     
     // 方法1：排序法（简单但不够高效）

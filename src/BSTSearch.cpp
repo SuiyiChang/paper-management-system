@@ -8,12 +8,14 @@
 
 // ==================== 构造函数 ====================
 BSTSearch::BSTSearch(std::vector<Paper>& papers) : root(nullptr) {
-    // TODO: 同学B实现
-    // 1. 初始化root为nullptr
+    // 1. 初始化root为nullptr（已在初始化列表中完成）
     // 2. 遍历papers，逐个插入到BST中
-    // 注意：插入顺序会影响树的平衡性
-    
-    std::cout << "BSTSearch: 构造函数待实现" << std::endl;
+    for (size_t i = 0; i < papers.size(); i++) {
+        root = insertNode(root, papers[i].getTitle(), &papers[i]);
+    }
+
+    std::cout << "BSTSearch: 已构建二叉搜索树，共 " << papers.size()
+              << " 篇论文，树高度: " << getHeight(root) << std::endl;
 }
 
 // ==================== 析构函数 ====================
@@ -115,6 +117,7 @@ Paper* BSTSearch::findByTitle(const std::string& title) {
 // ==================== 前缀查找（可选） ====================
 std::vector<Paper*> BSTSearch::findByTitlePrefix(const std::string& prefix) {
     // TODO: 同学B实现（可选）
+    (void)prefix;  // 避免未使用参数警告
     std::vector<Paper*> result;
     std::cout << "BSTSearch::findByTitlePrefix: 待实现" << std::endl;
     return result;
@@ -132,6 +135,7 @@ bool BSTSearch::insert(Paper* paper) {
 // ==================== 删除功能（可选） ====================
 bool BSTSearch::remove(const std::string& title) {
     // TODO: 同学B实现（可选，BST删除较复杂）
+    (void)title;  // 避免未使用参数警告
     std::cout << "BSTSearch::remove: 待实现" << std::endl;
     return false;
 }

@@ -9,38 +9,42 @@
 
 // ==================== 构造函数 ====================
 GraphAnalyzer::GraphAnalyzer(std::vector<Paper>& papers) {
-    // TODO: 同学C实现
     // 1. 建立paperMap（paperId -> Paper*）
-    // 2. 构建引用关系图（有向图）
-    // 3. 构建关键词共享图（无向图，可选）
-    
-    std::cout << "GraphAnalyzer: 构造函数待实现" << std::endl;
-    std::cout << "需要构建论文引用图和关键词共享图" << std::endl;
-    
-    // 示例代码框架：
-    // 建立ID到Paper的映射
-    for (auto& paper : papers) {
-        paperMap[paper.getPaperId()] = &paper;
+    for (size_t i = 0; i < papers.size(); i++) {
+        paperMap[papers[i].getPaperId()] = &papers[i];
     }
-    
-    // TODO: 构建引用图
-    // for (auto& paper : papers) {
-    //     int paperId = paper.getPaperId();
-    //     for (int refId : paper.getReferences()) {
-    //         citationGraph[paperId].push_back(refId);
-    //     }
-    // }
-    
-    // TODO: 构建关键词共享图（注意：O(n²)复杂度）
-    // for (size_t i = 0; i < papers.size(); i++) {
-    //     for (size_t j = i + 1; j < papers.size(); j++) {
-    //         if (hasSharedKeywords(&papers[i], &papers[j])) {
-    //             // 添加无向边
-    //             keywordGraph[papers[i].getPaperId()].push_back(papers[j].getPaperId());
-    //             keywordGraph[papers[j].getPaperId()].push_back(papers[i].getPaperId());
-    //         }
-    //     }
-    // }
+
+    // 2. 构建引用关系图（基于references字段）
+    // 注意：如果数据文件中没有引用关系，citationGraph将为空
+    for (size_t i = 0; i < papers.size(); i++) {
+        int paperId = papers[i].getPaperId();
+        std::vector<int> refs = papers[i].getReferences();
+        if (!refs.empty()) {
+            citationGraph[paperId] = refs;
+        }
+    }
+
+    // 3. 构建关键词共享图（基于共享关键词）
+    // 这样即使没有引用数据也能演示BFS功能
+    std::cout << "GraphAnalyzer: 正在构建论文关系图..." << std::endl;
+    std::cout << "  - 构建关键词共享图（共享至少1个关键词的论文视为相关）" << std::endl;
+
+    int edgeCount = 0;
+    for (size_t i = 0; i < papers.size(); i++) {
+        for (size_t j = i + 1; j < papers.size(); j++) {
+            int shared = papers[i].countSharedKeywords(papers[j]);
+            if (shared > 0) {
+                // 添加无向边（双向）
+                keywordGraph[papers[i].getPaperId()].push_back(papers[j].getPaperId());
+                keywordGraph[papers[j].getPaperId()].push_back(papers[i].getPaperId());
+                edgeCount++;
+            }
+        }
+    }
+
+    std::cout << "  - 论文节点数: " << papers.size() << std::endl;
+    std::cout << "  - 关键词关系边数: " << edgeCount << std::endl;
+    std::cout << "GraphAnalyzer: 图构建完成！" << std::endl;
 }
 
 // ==================== 析构函数 ====================
@@ -111,18 +115,23 @@ std::vector<int> GraphAnalyzer::bfs(int startId,
 
 // ==================== 核心功能：基于引用关系的BFS ====================
 std::vector<int> GraphAnalyzer::findRelatedPapersByBFS(int paperId) {
-    // TODO: 同学C实现
-    std::cout << "GraphAnalyzer::findRelatedPapersByBFS: 待实现" << std::endl;
-    std::cout << "起始论文ID: " << paperId << std::endl;
-    
+    std::cout << "\n开始BFS遍历，起始论文ID: " << paperId << std::endl;
+
     // 检查论文是否存在
     if (paperMap.find(paperId) == paperMap.end()) {
         std::cout << "错误：论文ID " << paperId << " 不存在" << std::endl;
         return std::vector<int>();
     }
-    
-    // 调用BFS遍历引用图
-    return bfs(paperId, citationGraph, -1);
+
+    // 优先使用引用图，如果为空则使用关键词图
+    if (!citationGraph.empty()) {
+        std::cout << "使用引用关系图进行BFS..." << std::endl;
+        return bfs(paperId, citationGraph, -1);
+    } else {
+        std::cout << "使用关键词共享图进行BFS..." << std::endl;
+        // 限制深度为2，避免返回过多结果
+        return bfs(paperId, keywordGraph, 2);
+    }
 }
 
 // ==================== 基于关键词共享的BFS ====================
@@ -140,6 +149,7 @@ std::vector<int> GraphAnalyzer::findRelatedPapersByKeywords(int paperId, int max
 // ==================== DFS（可选） ====================
 std::vector<int> GraphAnalyzer::findRelatedPapersByDFS(int paperId) {
     // TODO: 同学C实现（可选）
+    (void)paperId;  // 避免未使用参数警告
     std::cout << "GraphAnalyzer::findRelatedPapersByDFS: 待实现" << std::endl;
     return std::vector<int>();
 }
@@ -198,6 +208,7 @@ int GraphAnalyzer::getInDegree(int paperId) const {
 // ==================== 找出最有影响力的论文（可选） ====================
 std::vector<int> GraphAnalyzer::getMostInfluentialPapers(int topN) const {
     // TODO: 同学C实现（可选）
+    (void)topN;  // 避免未使用参数警告
     std::cout << "GraphAnalyzer::getMostInfluentialPapers: 待实现" << std::endl;
     return std::vector<int>();
 }

@@ -22,6 +22,7 @@ SOURCES = $(SRCDIR)/Paper.cpp \
           $(SRCDIR)/FileManager.cpp \
           $(SRCDIR)/HashSearch.cpp \
           $(SRCDIR)/BSTSearch.cpp \
+          $(SRCDIR)/KMPSearch.cpp \
           $(SRCDIR)/Sorter.cpp \
           $(SRCDIR)/GraphAnalyzer.cpp \
           $(SRCDIR)/Recommender.cpp \
@@ -35,6 +36,7 @@ HEADERS = $(INCDIR)/Paper.h \
           $(INCDIR)/FileManager.h \
           $(INCDIR)/HashSearch.h \
           $(INCDIR)/BSTSearch.h \
+          $(INCDIR)/KMPSearch.h \
           $(INCDIR)/Sorter.h \
           $(INCDIR)/GraphAnalyzer.h \
           $(INCDIR)/Recommender.h
